@@ -1,0 +1,1 @@
+export type NoteCreationState = "choosingType" | "noteWithDescription" | "noteWithChecklist";
