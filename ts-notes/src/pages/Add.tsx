@@ -1,14 +1,18 @@
 import { ChangeEvent, ReactNode, useState } from "react";
-import Checklist from "../components/add/Checklist";
+import ChecklistPanel from "../components/ChecklistPanel";
 
 import { Container, TextField } from "@mui/material";
 import TriggerNewNote from "../components/add/TriggerNewNote";
 import NewNoteSkeleton from "../components/add/NewNoteSkeleton";
 import { NoteCreationState } from "../types/NoteCreationState";
-import { Checklist as noteChecklist } from "../types/Checklist";
+import { Checklist } from "../types/Checklist";
 import { NoteCreationData } from "../types/NoteCreationData";
 import { getCurrentUserID } from "../serverRequests/getCurrentUserID";
 
+/* The invariant of the component:
+    * noteCreationState === "noteWithDescription" --> content is string
+    * noteCreationState === "noteWithChecklist" --> content is Checklist (array of ChecklistElement)
+*/
 const Add = () => {
     const defaultNewNoteData: NoteCreationData = {
         noteCreationState: "choosingType",
@@ -23,13 +27,14 @@ const Add = () => {
 
     /* Utility function to convert the content of a Checklist to description*/
     const convertChecklistToDescription = () => {
-        return (newNoteData.content as noteChecklist).map(c => c["content"]).join("\n");
+        return (newNoteData.content as Checklist).map(c => c["content"]).join("\n");
     };
     /* Utility function to convert the content of a description to a Checklist*/
     const convertDescriptionToChecklist = () => {
         return (newNoteData.content as string).split("\n").map(
             txt => {
                 return {
+                    id: crypto.randomUUID(),
                     content: txt,
                     isChecked: false
                 }
@@ -63,8 +68,8 @@ const Add = () => {
     }
 
     function handleContentChange(newContent: ChangeEvent<HTMLInputElement>): void
-    function handleContentChange(newContent: noteChecklist): void
-    function handleContentChange(newContent: ChangeEvent<HTMLInputElement> | noteChecklist) {
+    function handleContentChange(newContent: Checklist): void
+    function handleContentChange(newContent: ChangeEvent<HTMLInputElement> | Checklist) {
         if ('target' in newContent) {
             setNewNoteData({ ...newNoteData, content: newContent.target.value });
         } else {
@@ -119,7 +124,7 @@ const Add = () => {
                 onChange={handleContentChange}
             />
         } else if (newNoteData.noteCreationState === "noteWithChecklist") {
-            noteContent = <Checklist checklistElements={newNoteData.content as noteChecklist} onChecklistChange={handleContentChange} />;
+            noteContent = <ChecklistPanel checklistElements={newNoteData.content as Checklist} onChecklistChange={handleContentChange} />;
         } else {
             const _exhaustiveCheck: never = newNoteData.noteCreationState;
             return _exhaustiveCheck;

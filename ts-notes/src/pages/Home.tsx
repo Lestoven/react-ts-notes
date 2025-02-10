@@ -27,7 +27,6 @@ const Home = () => {
         owner: 1
     }]
     );
-
     return (
         <>
             <Container

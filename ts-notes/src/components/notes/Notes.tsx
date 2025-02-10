@@ -1,7 +1,7 @@
 import { NoteData } from "../../interfaces/NoteData";
 import { Paper, IconButton, Box, Typography, Divider } from "@mui/material";
 import PushPinIcon from "@mui/icons-material/PushPin";
-import Checklist from "../add/Checklist";
+import ChecklistPanel from "../ChecklistPanel";
 import { Checklist as NodeChecklist } from "../../types/Checklist";
 import Grid from "@mui/material/Grid";
 
@@ -35,7 +35,7 @@ const Notes = ({ notesData }: { notesData: NoteData[] }) => {
                             {typeof note.content === "string" ? (
                                 <Typography variant="body2">{note.content}</Typography>
                             ) : (
-                                <Checklist checklistElements={note.content as NodeChecklist} onChecklistChange={() => { }} />
+                                <ChecklistPanel checklistElements={note.content as NodeChecklist} onChecklistChange={() => { }} />
                             )}
                         </Box>
                     </Paper>
