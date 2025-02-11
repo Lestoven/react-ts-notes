@@ -1,32 +1,13 @@
-import { useState } from "react";
 import { NoteData } from "../interfaces/NoteData";
 import Notes from "../components/notes/Notes";
 import { Container } from "@mui/material";
+import { useNotes } from "../contexts/NotesContext";
 
-const Home = () => {
-    const [notesData, setNotesData] = useState<NoteData[]>([{
-        id: "asd",
-        title: "New Note",
-        content: "ye is crazy",
-        shared_with: [], // userids
-        color: "white",
-        isPinned: false,
-        dateCreated: new Date(),
-        dateUpdated: null,
-        owner: 1
-    },
-    {
-        id: "asd2",
-        title: "Note Title",
-        content: "I don't know what to write here",
-        shared_with: [], // userids
-        color: "black",
-        isPinned: false,
-        dateCreated: new Date(),
-        dateUpdated: null,
-        owner: 1
-    }]
-    );
+const Home = () => {    
+    const {notes: notesData, isLoading}: {notes: NoteData[], isLoading: boolean} = useNotes()!;
+    if (isLoading) {
+        return <p>Loading...</p>
+    }
     return (
         <>
             <Container

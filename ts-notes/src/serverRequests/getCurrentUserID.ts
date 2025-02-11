@@ -1,3 +1,3 @@
-export const getCurrentUserID = (): string => {
-    return "1";
+export const getCurrentUserID = (): number => {
+    return 1;
 };

@@ -8,6 +8,9 @@ import { NoteCreationState } from "../types/NoteCreationState";
 import { Checklist } from "../types/Checklist";
 import { NoteCreationData } from "../types/NoteCreationData";
 import { getCurrentUserID } from "../serverRequests/getCurrentUserID";
+import { useNotesDispatch } from "../contexts/NotesContext";
+import { saveNote } from "../serverRequests/saveNote";
+import { NoteData } from "../interfaces/NoteData";
 
 /* The invariant of the component:
     * noteCreationState === "noteWithDescription" --> content is string
@@ -91,15 +94,16 @@ const Add = () => {
         }
     };
 
-    const handleSave = () => {
+
+    async function handleSave() {
         const noteData = {
             ...newNoteData,
             dateCreated: new Date(),
             dateUpdated: null,
             owner: getCurrentUserID()
         }
-        console.log(noteData)
-
+        await saveNote(noteData);
+        
         // clean up the Note input
         setNewNoteData(defaultNewNoteData);
     };

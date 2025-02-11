@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import NotesProvider from './contexts/NotesContext';
 import Layout from './pages/Layout';
 import NoPage from './pages/NoPage';
 import Home from './pages/Home';
@@ -12,10 +13,15 @@ function App() {
 
   return (
     <>
+
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Layout />}>
-            <Route index element={<Home />} />
+            <Route index element={
+              <NotesProvider>
+                <Home />
+              </NotesProvider>
+            } />
 
             <Route path="/add" element={<Add />} />
             <Route path="/login" element={<Login />} />
