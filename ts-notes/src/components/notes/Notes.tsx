@@ -7,7 +7,7 @@ import Grid from "@mui/material/Grid";
 
 const Notes = ({ notesData }: { notesData: NoteData[] }) => {
     return (
-        <Grid container spacing={2}>
+        <Grid container spacing={2} sx={{marginTop: "60px"}}>
             {notesData.map((note) => (
                 <Grid item xs={12} sm={6} md={4} key={note.id}>
                     <Paper

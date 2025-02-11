@@ -51,7 +51,7 @@ function notesReducer(notes: NoteData[], action: NotesAction): NoteData[] {
             return action.payload;
         }
         case 'create': {
-            return [...notes, action.payload];
+            return [action.payload, ...notes];
         }
         case 'update': {
             return notes.map(note => note.id === action.payload.id ? action.payload : note);

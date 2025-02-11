@@ -2,11 +2,22 @@ import { NoteData } from "../interfaces/NoteData";
 import Notes from "../components/notes/Notes";
 import { Container } from "@mui/material";
 import { useNotes } from "../contexts/NotesContext";
+import { Box, CircularProgress } from '@mui/material';
+import Add from "./Add";
 
 const Home = () => {    
     const {notes: notesData, isLoading}: {notes: NoteData[], isLoading: boolean} = useNotes()!;
     if (isLoading) {
-        return <p>Loading...</p>
+        return (
+            <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            height="90vh"
+          >
+            <CircularProgress size={75}/>
+          </Box>
+        );
     }
     return (
         <>
@@ -18,7 +29,7 @@ const Home = () => {
                     alignItems: "center",
                 }}
             >
-                <h1 className="text-red">Home</h1>
+                <Add />
                 <Notes notesData={notesData} />
             </Container>
 
