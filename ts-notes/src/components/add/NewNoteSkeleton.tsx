@@ -12,6 +12,7 @@ import PushPinIcon from "@mui/icons-material/PushPin";
 import Typography from '@mui/material/Typography';
 import { NoteCreationData } from "../../types/NoteCreationData";
 import SearchIcon from "@mui/icons-material/Search";
+import { Checklist } from "../../types/Checklist";
 
 const NewNoteSkeleton = ({ newNoteData, onReset, onNoteCreationStateChange, onNoteTitleChange, onPinChange, onSave, children }:
     {
@@ -32,6 +33,14 @@ const NewNoteSkeleton = ({ newNoteData, onReset, onNoteCreationStateChange, onNo
 
     const handleOptionsClose = () => {
         setOptionsAnchor(null);
+    };
+
+    const isNoteInputValid = (): boolean => {
+        return newNoteData.title !== "" ||
+            (
+                (newNoteData.noteCreationState === "noteWithDescription" && newNoteData.content.length > 0) || 
+                (newNoteData.noteCreationState === "noteWithChecklist" && (newNoteData.content as Checklist).some(e => e.content.length > 0))
+            );
     };
 
     return (
@@ -88,9 +97,9 @@ const NewNoteSkeleton = ({ newNoteData, onReset, onNoteCreationStateChange, onNo
                         >
                             <MenuItem onClick={() => console.log("not implemented yet")}>Címke hozzáadása</MenuItem>
                             {newNoteData.noteCreationState === "noteWithDescription" ?
-                                <MenuItem onClick={() => {onNoteCreationStateChange("noteWithChecklist"); handleOptionsClose()}}>Váltás listára</MenuItem>
+                                <MenuItem onClick={() => { onNoteCreationStateChange("noteWithChecklist"); handleOptionsClose() }}>Váltás listára</MenuItem>
                                 :
-                                <MenuItem onClick={() => {onNoteCreationStateChange("noteWithDescription"); handleOptionsClose()}}>Váltás szövegdobozra</MenuItem>
+                                <MenuItem onClick={() => { onNoteCreationStateChange("noteWithDescription"); handleOptionsClose() }}>Váltás szövegdobozra</MenuItem>
                             }
                         </Menu>
                     </Box>
@@ -98,7 +107,8 @@ const NewNoteSkeleton = ({ newNoteData, onReset, onNoteCreationStateChange, onNo
                     <Box>
                         <Button variant="text" sx={{ color: "blue" }} onClick={() => onReset()}>Alaphelyzet</Button>
                         <Button variant="text" sx={{ color: "black" }} onClick={() => onNoteCreationStateChange("choosingType")}>Bezárás</Button>
-                        <Button variant="text" sx={{ color: "green" }} onClick={onSave}>Mentés</Button>
+                        <Button variant="text" sx={{ color: "green" }} onClick={onSave}
+                            disabled={!isNoteInputValid()}>Mentés</Button>
                     </Box>
                 </Box>
             </Paper>
