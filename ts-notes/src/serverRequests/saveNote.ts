@@ -5,7 +5,7 @@ export async function saveNote(newNoteData: Omit<NoteData, "id">): Promise<NoteD
     // save noteData
     await saveNoteOnServer(2000);
     
-    const noteFromDB = {...newNoteData, id: 2}; 
+    const noteFromDB = {...newNoteData, id: 3}; 
     //throw new Error("asdsd");
     return noteFromDB;
 };

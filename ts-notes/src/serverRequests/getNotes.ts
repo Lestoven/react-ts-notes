@@ -5,7 +5,7 @@ export async function getNotes(): Promise<NoteData[]> {
     return [{
         id: 0,
         title: "New Note",
-        content: "ye is crazy",
+        content: "this is crazy",
         shared_with: [], // userids
         color: "white",
         isPinned: false,
@@ -22,6 +22,17 @@ export async function getNotes(): Promise<NoteData[]> {
         shared_with: [], // userids
         color: "black",
         isPinned: false,
+        dateCreated: new Date(),
+        dateUpdated: null,
+        owner: 1
+    },
+    {
+        id: 2,
+        title: "Fresh Note",
+        content: "wow!",
+        shared_with: [], // userids
+        color: "white",
+        isPinned: true,
         dateCreated: new Date(),
         dateUpdated: null,
         owner: 1

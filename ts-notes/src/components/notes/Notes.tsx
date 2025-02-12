@@ -1,59 +1,79 @@
 import { NoteData } from "../../interfaces/NoteData";
-import { Paper, IconButton, Box, Typography, Divider } from "@mui/material";
-import PushPinIcon from "@mui/icons-material/PushPin";
-import ChecklistPanel from "../ChecklistPanel";
-import { Checklist, Checklist as NodeChecklist } from "../../types/Checklist";
+import { Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
-import { handleNoteUpdate, useNotesDispatch } from "../../contexts/NotesContext";
+import Note from "./Note";
+import { Box } from "@mui/joy";
 
 const Notes = ({ notesData }: { notesData: NoteData[] }) => {
-    const notesDispatch = useNotesDispatch();
-    
-    const handleCheckListChange = (note: NoteData) => {
-        return (updatedList: Checklist) => {
-            if (notesDispatch) {
-                const updatedNote = {...note, content: updatedList};
-                handleNoteUpdate(updatedNote, notesDispatch);
-            }
-        };
+    const pinnedNotes: NoteData[] = [];
+    const otherNotes: NoteData[] = [];
+
+    notesData.forEach(note => {
+        if (note.isPinned) {
+            pinnedNotes.push(note);
+        } else {
+            otherNotes.push(note);
+        }
+    });
+
+    const renderNotes = (categoryTitle: string, notesToRender: NoteData[]) => {
+        return (
+            <>
+                <Typography
+                    variant="h6"
+                    sx={{ fontSize: "14px", textTransform: "uppercase", textAlign: "left", marginLeft: "8px", marginTop: "60px", marginBottom: 0 }}
+                >
+                    {categoryTitle}
+                </Typography>
+                <Grid container spacing={2} sx={{ marginTop: 0 }}>
+                    {notesToRender.map((note) => (
+                        <Note key={note.id} note={note} />
+                    ))}
+                </Grid>
+            </>
+        );
     };
 
+    if (notesData.length === 0) {
+        return (
+            <Box
+                sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    height: "75vh"
+                }}
+            >
+                <Typography
+                    variant="h5"
+                    sx={{
+                        textTransform: "uppercase",
+                        textAlign: "center",
+                        fontStyle: "italic",
+                        fontWeight: "bold",
+                        letterSpacing: "1.5px"
+                    }}
+                >
+                    Nincsenek még jegyzeteid jelenleg
+                </Typography>
+            </Box>
+        );
+    }
+
     return (
-        <Grid container spacing={2} sx={{marginTop: "60px"}}>
-            {notesData.map((note) => (
-                <Grid item xs={12} sm={6} md={4} key={note.id}>
-                    <Paper
-                        sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            padding: 2,
-                            borderRadius: 2,
-                            width: "100%",
-                            minHeight: "150px",
-                            boxSizing: "border-box",
-                        }}
-                        elevation={3}
-                    >
-                        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                            <Typography variant="h6" component="h2">
-                                {note.title}
-                            </Typography>
-                            <IconButton>
-                                <PushPinIcon color={note.isPinned ? "primary" : "inherit"} />
-                            </IconButton>
-                        </Box>
-                        <Divider sx={{ marginY: 1 }} />
-                        <Box sx={{ marginTop: 1 }}>
-                            {typeof note.content === "string" ? (
-                                <Typography variant="body2">{note.content}</Typography>
-                            ) : (
-                                <ChecklistPanel checklistElements={note.content as NodeChecklist} onChecklistChange={handleCheckListChange(note)} />
-                            )}
-                        </Box>
-                    </Paper>
-                </Grid>
-            ))}
-        </Grid>
+        <>
+            {pinnedNotes.length > 0 && (
+                <>
+                    {renderNotes("rögzítve", pinnedNotes)}
+                </>
+            )}
+
+            {otherNotes.length > 0 && (
+                <>
+                    {renderNotes("egyéb", otherNotes)}
+                </>
+            )}
+        </>
     );
 };
 
