@@ -16,7 +16,9 @@ export async function getNotes(): Promise<NoteData[]> {
     {
         id: 1,
         title: "Note Title",
-        content: "I don't know what to write here",
+        content: [{ id: "id1", content: "item1", isChecked: true }, 
+            { id: "id2", content: "item2", isChecked: true }, 
+            { id: "id3", content: "item3", isChecked: false }],
         shared_with: [], // userids
         color: "black",
         isPinned: false,

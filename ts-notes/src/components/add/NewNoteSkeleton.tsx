@@ -38,7 +38,7 @@ const NewNoteSkeleton = ({ newNoteData, onReset, onNoteCreationStateChange, onNo
     const isNoteInputValid = (): boolean => {
         return newNoteData.title !== "" ||
             (
-                (newNoteData.noteCreationState === "noteWithDescription" && newNoteData.content.length > 0) || 
+                (newNoteData.noteCreationState === "noteWithDescription" && newNoteData.content.length > 0) ||
                 (newNoteData.noteCreationState === "noteWithChecklist" && (newNoteData.content as Checklist).some(e => e.content.length > 0))
             );
     };
@@ -56,7 +56,8 @@ const NewNoteSkeleton = ({ newNoteData, onReset, onNoteCreationStateChange, onNo
                 elevation={3}
             >
                 <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <TextField value={newNoteData.title} variant="standard" placeholder="Cím" fullWidth InputProps={{ disableUnderline: true }} onChange={onNoteTitleChange} />
+                    <TextField value={newNoteData.title} variant="standard" placeholder="Cím" autoComplete="off"
+                        fullWidth InputProps={{ disableUnderline: true }} onChange={onNoteTitleChange} />
                     <IconButton onClick={onPinChange}>
                         <PushPinIcon color={newNoteData.isPinned ? "primary" : "inherit"} />
                     </IconButton>

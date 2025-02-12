@@ -3,7 +3,8 @@ import CloseIcon from "@mui/icons-material/Close";
 import { ChangeEvent } from "react";
 import { Checklist } from "../types/Checklist";
 
-const ChecklistPanel = ({ checklistElements, onChecklistChange }: { checklistElements: Checklist, onChecklistChange: (newContent: Checklist) => void }) => {
+const ChecklistPanel = ({ checklistElements, onChecklistChange }:
+    { checklistElements: Checklist, onChecklistChange: (newContent: Checklist) => void }) => {
 
     const addListItem = () => {
         onChecklistChange([...checklistElements, { id: crypto.randomUUID(), content: "", isChecked: false }]);

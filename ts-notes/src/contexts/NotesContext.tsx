@@ -6,17 +6,18 @@ import { NewNoteData } from "../interfaces/NewNoteData";
 import { saveNote } from "../serverRequests/saveNote";
 import { toast, Slide } from 'react-toastify';
 import { getCurrentUserID } from "../serverRequests/getCurrentUserID";
+import { updateNote } from "../serverRequests/updateNote";
 
 type NotesAction =
-    | { type: "set"; payload: NoteData[] } 
+    | { type: "set"; payload: NoteData[] }
     | { type: "create"; payload: NoteData }
     | { type: "update"; payload: NoteData }
     | { type: "delete"; payload: { id: number } };
 
-const NotesContext = createContext<{notes: NoteData[], isLoading: boolean } | undefined>(undefined);
+const NotesContext = createContext<{ notes: NoteData[], isLoading: boolean } | undefined>(undefined);
 const NotesDispatchContext = createContext<React.Dispatch<NotesAction> | undefined>(undefined);
 
-const NotesProvider = ({children}: {children: ReactNode}) => {
+const NotesProvider = ({ children }: { children: ReactNode }) => {
     const initialNotes: NoteData[] = [];
 
     const [notes, dispatch] = useReducer(notesReducer, initialNotes);
@@ -25,7 +26,7 @@ const NotesProvider = ({children}: {children: ReactNode}) => {
     useEffect(() => {
         async function fetchNotes() {
             const notesData: NoteData[] = await getNotes();
-            dispatch({type: "set", payload: notesData});
+            dispatch({ type: "set", payload: notesData });
             setIsLoading(false);
         };
 
@@ -34,7 +35,7 @@ const NotesProvider = ({children}: {children: ReactNode}) => {
 
 
     return (
-        <NotesContext.Provider value={{notes: notes, isLoading: isLoading}}>
+        <NotesContext.Provider value={{ notes: notes, isLoading: isLoading }}>
             <NotesDispatchContext.Provider value={dispatch}>
                 {children}
             </NotesDispatchContext.Provider>
@@ -51,7 +52,7 @@ export function useNotesDispatch() {
 };
 
 function notesReducer(notes: NoteData[], action: NotesAction): NoteData[] {
-    switch(action.type) {
+    switch (action.type) {
         case 'set': {
             return action.payload;
         }
@@ -63,17 +64,17 @@ function notesReducer(notes: NoteData[], action: NotesAction): NoteData[] {
         }
         case 'delete': {
             return notes.filter(note => note.id !== action.payload.id);
-        } 
-        default : {
+        }
+        default: {
             const _exhaustiveCheck: never = action
             return _exhaustiveCheck;
         }
     };
 };
 
-export async function handleNoteSave(newNoteData: NewNoteData, dispatch: React.Dispatch<NotesAction>) {
+export async function handleNoteSave(newNote: NewNoteData, dispatch: React.Dispatch<NotesAction>) {
     const noteData = {
-        ...newNoteData,
+        ...newNote,
         id: -Date.now(), // generate temporary id
         dateCreated: new Date(),
         dateUpdated: null,
@@ -88,7 +89,6 @@ export async function handleNoteSave(newNoteData: NewNoteData, dispatch: React.D
         // display success toast message
         toast.success("Note saved successfully!", {
             position: "bottom-center",
-            type: "success",
             isLoading: false,
             autoClose: 2500,
             transition: Slide,
@@ -99,7 +99,6 @@ export async function handleNoteSave(newNoteData: NewNoteData, dispatch: React.D
         // display error toast message
         toast.error("Failed to save note!", {
             position: "bottom-center",
-            type: "error",
             isLoading: false,
             autoClose: 2500,
             transition: Slide,
@@ -107,6 +106,33 @@ export async function handleNoteSave(newNoteData: NewNoteData, dispatch: React.D
         });
         dispatch({ type: 'delete', payload: { id: noteData.id } }); // Remove the "new note" from the UI
     }
-}
+};
+
+export async function handleNoteUpdate(updatedNote: NoteData, dispatch: React.Dispatch<NotesAction>) {
+    dispatch({
+        type: 'update',
+        payload: updatedNote
+    });
+
+    try {
+        await updateNote(updatedNote);
+        toast.success("Note updated!", {
+            position: "bottom-center",
+            isLoading: false,
+            autoClose: 2500,
+            transition: Slide,
+            closeOnClick: true
+        });
+    } catch(error) {
+        // display error toast message
+        toast.error("Failed to update node!", {
+            position: "bottom-center",
+            isLoading: false,
+            autoClose: 2500,
+            transition: Slide,
+            closeOnClick: true
+        });
+    };
+};
 
 export default NotesProvider;

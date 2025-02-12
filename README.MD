@@ -1,6 +1,5 @@
 TODO:
 
-* **Note validation** before saving
 * **Edit**
 * **PIN** 
 * **Color** picker

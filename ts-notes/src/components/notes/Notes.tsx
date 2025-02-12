@@ -2,10 +2,22 @@ import { NoteData } from "../../interfaces/NoteData";
 import { Paper, IconButton, Box, Typography, Divider } from "@mui/material";
 import PushPinIcon from "@mui/icons-material/PushPin";
 import ChecklistPanel from "../ChecklistPanel";
-import { Checklist as NodeChecklist } from "../../types/Checklist";
+import { Checklist, Checklist as NodeChecklist } from "../../types/Checklist";
 import Grid from "@mui/material/Grid";
+import { handleNoteUpdate, useNotesDispatch } from "../../contexts/NotesContext";
 
 const Notes = ({ notesData }: { notesData: NoteData[] }) => {
+    const notesDispatch = useNotesDispatch();
+    
+    const handleCheckListChange = (note: NoteData) => {
+        return (updatedList: Checklist) => {
+            if (notesDispatch) {
+                const updatedNote = {...note, content: updatedList};
+                handleNoteUpdate(updatedNote, notesDispatch);
+            }
+        };
+    };
+
     return (
         <Grid container spacing={2} sx={{marginTop: "60px"}}>
             {notesData.map((note) => (
@@ -35,7 +47,7 @@ const Notes = ({ notesData }: { notesData: NoteData[] }) => {
                             {typeof note.content === "string" ? (
                                 <Typography variant="body2">{note.content}</Typography>
                             ) : (
-                                <ChecklistPanel checklistElements={note.content as NodeChecklist} onChecklistChange={() => { }} />
+                                <ChecklistPanel checklistElements={note.content as NodeChecklist} onChecklistChange={handleCheckListChange(note)} />
                             )}
                         </Box>
                     </Paper>
