@@ -7,10 +7,7 @@ import NewNoteSkeleton from "../components/add/NewNoteSkeleton";
 import { NoteCreationState } from "../types/NoteCreationState";
 import { Checklist } from "../types/Checklist";
 import { NoteCreationData } from "../types/NoteCreationData";
-import { getCurrentUserID } from "../serverRequests/getCurrentUserID";
-import { saveNote } from "../serverRequests/saveNote";
-import { toast, Slide } from 'react-toastify';
-import { useNotesDispatch } from "../contexts/NotesContext";
+import { handleNoteSave, useNotesDispatch } from "../contexts/NotesContext";
 
 /* The invariant of the component:
     * noteCreationState === "noteWithDescription" --> content is string
@@ -27,7 +24,7 @@ const Add = () => {
     };
 
     const [newNoteData, setNewNoteData] = useState<NoteCreationData>(defaultNewNoteData);
-    const dispatch = useNotesDispatch()!;
+    const notesDispatch = useNotesDispatch();
 
     /* Utility function to convert the content of a Checklist to description*/
     const convertChecklistToDescription = () => {
@@ -96,41 +93,11 @@ const Add = () => {
     };
 
     async function handleSave() {
-        const noteData = {
-            ...newNoteData,
-            id: -Date.now(), // generate temporary id
-            dateCreated: new Date(),
-            dateUpdated: null,
-            owner: getCurrentUserID()
-        };
+        if (notesDispatch) {
+            // reset the Note input
+            setNewNoteData(defaultNewNoteData);
 
-        dispatch({ type: "create", payload: noteData });
-        // clean up the Note input
-        setNewNoteData(defaultNewNoteData);
-
-        try {
-            const resultNode = await saveNote(noteData);
-
-            // display success message
-            toast.success("Note saved successfully!", {
-                position: "bottom-center",
-                type: "success",
-                isLoading: false,
-                autoClose: 2500,
-                transition: Slide,
-                closeOnClick: true,
-            });
-            dispatch({ type: 'update', payload: resultNode }); // update the new node to have the ID that the server generated
-        } catch (error) {
-            toast.error("Failed to save note!", {
-                position: "bottom-center",
-                type: "error",
-                isLoading: false,
-                autoClose: 2500,
-                transition: Slide,
-                closeOnClick: true,
-            });
-            dispatch({ type: 'delete', payload: { id: noteData.id } }); // update the new node to have the ID that the server generated
+            await handleNoteSave(newNoteData, notesDispatch);
         }
     };
 

@@ -1,6 +1,6 @@
 import { NoteData } from "../interfaces/NoteData";
 
-// saves the note and returns the NoteData with the generated "id"
+// saves the note and returns the NoteData with the generated "id" included
 export async function saveNote(newNoteData: Omit<NoteData, "id">): Promise<NoteData> {
     // save noteData
     await saveNoteOnServer(2000);
