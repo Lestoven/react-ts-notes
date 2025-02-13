@@ -16,7 +16,14 @@ const Note = ({ note }: { note: NoteData }) => {
             handleNoteUpdate(updatedNote, notesDispatch);
         }
     };
-    
+
+    const handlePinClick = () => {
+        if (notesDispatch) {
+            const updatedNote = { ...note, isPinned: !note.isPinned };
+            handleNoteUpdate(updatedNote, notesDispatch);
+        }
+    };
+
     return (
         <Grid item xs={12} sm={6} md={4} key={note.id}>
             <Paper
@@ -35,8 +42,8 @@ const Note = ({ note }: { note: NoteData }) => {
                     <Typography variant="h6" component="h2">
                         {note.title}
                     </Typography>
-                    <IconButton>
-                        <PushPinIcon color={note.isPinned ? "primary" : "inherit"} />
+                    <IconButton onClick={handlePinClick}>
+                        <PushPinIcon color={note.isPinned ? "primary" : "inherit"}/>
                     </IconButton>
                 </Box>
                 <Divider sx={{ marginY: 1 }} />
