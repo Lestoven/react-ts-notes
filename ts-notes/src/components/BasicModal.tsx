@@ -3,7 +3,8 @@ import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
 import Typography from '@mui/material/Typography';
-import { ReactNode } from 'react';
+import { useModalContext, useModalDispatchContext } from '../contexts/ModalContext';
+import { ModalData } from '../interfaces/ModalData';
 
 const style = {
   position: 'absolute',
@@ -18,15 +19,17 @@ const style = {
   color: "white"
 };
 
-export default function BasicModal({title, isOpen, setIsOpen, children}: {title: string, isOpen: boolean, setIsOpen: React.Dispatch<React.SetStateAction<boolean>>, children: ReactNode}) {
-  const handleClose = () => setIsOpen(false);
+export default function BasicModal() {
+  const handleClose = () => modalDispatch({type: "close"});
 
+  const modalData: ModalData = useModalContext()!;
+  const modalDispatch = useModalDispatchContext()!;
   return (
     <div>
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
-        open={isOpen}
+        open={modalData.isOpen}
         onClose={handleClose}
         closeAfterTransition
         slots={{ backdrop: Backdrop }}
@@ -36,12 +39,12 @@ export default function BasicModal({title, isOpen, setIsOpen, children}: {title:
           },
         }}
       >
-        <Fade in={isOpen}>
+        <Fade in={modalData.isOpen}>
           <Box sx={style}>
             <Typography id="transition-modal-title" variant="h6" component="h2">
-              {title}
+              {modalData.title}
             </Typography>
-            {children}
+            {modalData.content}
           </Box>
         </Fade>
       </Modal>

@@ -1,18 +1,18 @@
 import { ReactNode, useState } from "react";
 import { ChangeEvent, MouseEvent } from "react";
-import BasicModal from "../BasicModal";
 import { NoteCreationState } from "../../types/NoteCreationState";
-import { TextField, Paper, IconButton, Box, Button, InputAdornment, Menu, MenuItem } from "@mui/material";
+import { TextField, Paper, IconButton, Box, Button, Menu, MenuItem, InputAdornment } from "@mui/material";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import PaletteIcon from "@mui/icons-material/Palette";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import UndoIcon from "@mui/icons-material/Undo";
 import RedoIcon from "@mui/icons-material/Redo";
 import PushPinIcon from "@mui/icons-material/PushPin";
-import Typography from '@mui/material/Typography';
 import { NoteCreationData } from "../../types/NoteCreationData";
-import SearchIcon from "@mui/icons-material/Search";
 import { Checklist } from "../../types/Checklist";
+import { useModalDispatchContext } from "../../contexts/ModalContext";
+import SearchIcon from "@mui/icons-material/Search";
+import Typography from '@mui/material/Typography';
 
 const NewNoteSkeleton = ({ newNoteData, onReset, onNoteCreationStateChange, onNoteTitleChange, onPinChange, onSave, children }:
     {
@@ -23,9 +23,9 @@ const NewNoteSkeleton = ({ newNoteData, onReset, onNoteCreationStateChange, onNo
         onPinChange: () => void, onSave: () => void,
         children: ReactNode
     }) => {
-
-    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const [optionsAnchor, setOptionsAnchor] = useState<null | HTMLElement>(null);
+
+    const modalDispatch = useModalDispatchContext()!;
 
     const handleOptionsOpen = (event: MouseEvent<HTMLElement>) => {
         setOptionsAnchor(event.currentTarget);
@@ -33,6 +33,39 @@ const NewNoteSkeleton = ({ newNoteData, onReset, onNoteCreationStateChange, onNo
 
     const handleOptionsClose = () => {
         setOptionsAnchor(null);
+    };
+
+
+    const handleShareModalOpen = () => {
+        modalDispatch({
+            type: "open", title: "Együttműködők", content:
+                <>
+                    <TextField
+                        variant="outlined"
+                        placeholder="Search..."
+                        size="small"
+                        sx={{
+                            backgroundColor: "#424242", // Dark gray background
+                            borderRadius: "4px",
+                            input: { color: "white" }, // White text color
+                            "& .MuiOutlinedInput-root": {
+                                "& fieldset": { border: "none" }, // Remove border
+                            },
+                            marginTop: "10px"
+                        }}
+                        InputProps={{
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    <SearchIcon sx={{ color: "white" }} />
+                                </InputAdornment>
+                            ),
+                        }}
+                    />
+                    <Typography id="transition-modal-description" sx={{ mt: 2 }}>
+                        Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
+                    </Typography>
+                </>
+        });
     };
 
     const isNoteInputValid = (): boolean => {
@@ -66,7 +99,7 @@ const NewNoteSkeleton = ({ newNoteData, onReset, onNoteCreationStateChange, onNo
                 {children}
                 <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 2 }}>
                     <Box>
-                        <IconButton onClick={() => setIsModalOpen(!isModalOpen)}>
+                        <IconButton onClick={handleShareModalOpen}>
                             <PersonAddIcon />
                         </IconButton>
                         <IconButton>
@@ -113,33 +146,6 @@ const NewNoteSkeleton = ({ newNoteData, onReset, onNoteCreationStateChange, onNo
                     </Box>
                 </Box>
             </Paper>
-
-            <BasicModal title={"Együttműködők"} isOpen={isModalOpen} setIsOpen={setIsModalOpen} >
-                <TextField
-                    variant="outlined"
-                    placeholder="Search..."
-                    size="small"
-                    sx={{
-                        backgroundColor: "#424242", // Dark gray background
-                        borderRadius: "4px",
-                        input: { color: "white" }, // White text color
-                        "& .MuiOutlinedInput-root": {
-                            "& fieldset": { border: "none" }, // Remove border
-                        },
-                        marginTop: "10px"
-                    }}
-                    InputProps={{
-                        startAdornment: (
-                            <InputAdornment position="start">
-                                <SearchIcon sx={{ color: "white" }} />
-                            </InputAdornment>
-                        ),
-                    }}
-                />
-                <Typography id="transition-modal-description" sx={{ mt: 2 }}>
-                    Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-                </Typography>
-            </BasicModal>
         </>
     );
 };

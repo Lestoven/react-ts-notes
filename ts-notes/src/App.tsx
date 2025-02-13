@@ -9,24 +9,26 @@ import Register from './pages/auth/Register';
 import { ToastContainer } from 'react-toastify';
 
 import './App.css'
+import ModalProvider from './contexts/ModalContext';
 
 function App() {
-
   return (
     <>
       <NotesProvider>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Layout />}>
-              <Route index element={<Home />} />
+        <ModalProvider>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Layout />}>
+                <Route index element={<Home />} />
 
-              <Route path="/add" element={<Add />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="*" element={<NoPage />} />
-            </Route>
-          </Routes>
-        </BrowserRouter>
+                <Route path="/add" element={<Add />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="*" element={<NoPage />} />
+              </Route>
+            </Routes>
+          </BrowserRouter>
+        </ModalProvider>
       </NotesProvider>
 
       <ToastContainer
