@@ -23,11 +23,11 @@ const ModalProvider = ({ children }: { children: ReactNode }) => {
     );
 };
 
-export function useModalContext() {
+export function useModal() {
     return useContext(ModalContext);
 };
 
-export function useModalDispatchContext() {
+export function useModalDispatch() {
     return useContext(ModalDispatchContext);
 }
 

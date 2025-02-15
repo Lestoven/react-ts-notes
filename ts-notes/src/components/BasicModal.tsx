@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
 import Typography from '@mui/material/Typography';
-import { useModalContext, useModalDispatchContext } from '../contexts/ModalContext';
+import { useModal, useModalDispatch } from '../contexts/ModalContext';
 import { ModalData } from '../interfaces/ModalData';
 
 const style = {
@@ -20,10 +20,14 @@ const style = {
 };
 
 export default function BasicModal() {
-  const handleClose = () => modalDispatch({type: "close"});
+  const handleClose = () => {
+    if (modalDispatch) {
+      modalDispatch({type: "close"});
+    }
+  };
 
-  const modalData: ModalData = useModalContext()!;
-  const modalDispatch = useModalDispatchContext()!;
+  const modalData: ModalData = useModal()!;
+  const modalDispatch = useModalDispatch();
   return (
     <div>
       <Modal

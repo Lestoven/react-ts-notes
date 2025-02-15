@@ -10,7 +10,7 @@ import RedoIcon from "@mui/icons-material/Redo";
 import PushPinIcon from "@mui/icons-material/PushPin";
 import { NoteCreationData } from "../../types/NoteCreationData";
 import { Checklist } from "../../types/Checklist";
-import { useModalDispatchContext } from "../../contexts/ModalContext";
+import { useModalDispatch } from "../../contexts/ModalContext";
 import SearchIcon from "@mui/icons-material/Search";
 import Typography from '@mui/material/Typography';
 
@@ -25,7 +25,7 @@ const NewNoteSkeleton = ({ newNoteData, onReset, onNoteCreationStateChange, onNo
     }) => {
     const [optionsAnchor, setOptionsAnchor] = useState<null | HTMLElement>(null);
 
-    const modalDispatch = useModalDispatchContext()!;
+    const modalDispatch = useModalDispatch();
 
     const handleOptionsOpen = (event: MouseEvent<HTMLElement>) => {
         setOptionsAnchor(event.currentTarget);
@@ -37,35 +37,37 @@ const NewNoteSkeleton = ({ newNoteData, onReset, onNoteCreationStateChange, onNo
 
 
     const handleShareModalOpen = () => {
-        modalDispatch({
-            type: "open", title: "Együttműködők", content:
-                <>
-                    <TextField
-                        variant="outlined"
-                        placeholder="Search..."
-                        size="small"
-                        sx={{
-                            backgroundColor: "#424242", // Dark gray background
-                            borderRadius: "4px",
-                            input: { color: "white" }, // White text color
-                            "& .MuiOutlinedInput-root": {
-                                "& fieldset": { border: "none" }, // Remove border
-                            },
-                            marginTop: "10px"
-                        }}
-                        InputProps={{
-                            startAdornment: (
-                                <InputAdornment position="start">
-                                    <SearchIcon sx={{ color: "white" }} />
-                                </InputAdornment>
-                            ),
-                        }}
-                    />
-                    <Typography id="transition-modal-description" sx={{ mt: 2 }}>
-                        Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-                    </Typography>
-                </>
-        });
+        if (modalDispatch) {
+            modalDispatch({
+                type: "open", title: "Együttműködők", content:
+                    <>
+                        <TextField
+                            variant="outlined"
+                            placeholder="Search..."
+                            size="small"
+                            sx={{
+                                backgroundColor: "#424242", // Dark gray background
+                                borderRadius: "4px",
+                                input: { color: "white" }, // White text color
+                                "& .MuiOutlinedInput-root": {
+                                    "& fieldset": { border: "none" }, // Remove border
+                                },
+                                marginTop: "10px"
+                            }}
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position="start">
+                                        <SearchIcon sx={{ color: "white" }} />
+                                    </InputAdornment>
+                                ),
+                            }}
+                        />
+                        <Typography id="transition-modal-description" sx={{ mt: 2 }}>
+                            Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
+                        </Typography>
+                    </>
+            });
+        }
     };
 
     const isNoteInputValid = (): boolean => {
