@@ -10,10 +10,10 @@ import { Container } from "@mui/material";
 import { NoteData, NoteAction } from "../../types/noteAction";
 
 
-const NoteEditor = ({ defaultNoteData, onSave, onClose }:
+const NoteEditor = <T extends NoteData>({ defaultNoteData, onSave, onClose }:
     {
-        defaultNoteData: NoteData,
-        onSave: () => void,
+        defaultNoteData: T,
+        onSave: (noteData: T) => void,
         onClose: () => void
     }) => {
     const [note, dispatch] = useReducer(noteReducer, defaultNoteData);
@@ -38,7 +38,7 @@ const NoteEditor = ({ defaultNoteData, onSave, onClose }:
             <NoteSkeleton
                 note={note}
                 dispatch={dispatch}
-                onSave={onSave}
+                onSave={() => onSave(note as T)}
                 onClose={onClose}
             >
                 {noteContent}

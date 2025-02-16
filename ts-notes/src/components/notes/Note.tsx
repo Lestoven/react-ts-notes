@@ -32,7 +32,7 @@ const Note = ({ note }: { note: NoteData }) => {
 
     const handleEditBtnClick = () => {
         if (modalDispatch) {
-            modalDispatch({type: "open", title: "Jegyzet szerkeztése", content: <Edit originalNoteData={note}/>});
+            modalDispatch({type: "open", title: "Jegyzet szerkeztése", content: <Edit defaultNoteData={note}/>});
         }
     };
 
