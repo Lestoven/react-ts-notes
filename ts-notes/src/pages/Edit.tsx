@@ -1,4 +1,4 @@
-import NoteSkeleton from "../components/edit/NoteSkeleton";
+import NoteSkeleton from "../components/notes/NoteSkeleton";
 import { Note } from "../types/note";
 import { ReactNode, useState } from "react";
 import { Checklist } from "../types/list";

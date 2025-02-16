@@ -1,6 +1,6 @@
 import { ReactNode, useState } from "react";
 import { ChangeEvent, MouseEvent } from "react";
-import { TextField, Paper, IconButton, Box, Button, Menu, MenuItem, InputAdornment } from "@mui/material";
+import { TextField, Paper, IconButton, Box, Button, Menu, MenuItem } from "@mui/material";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import PaletteIcon from "@mui/icons-material/Palette";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
@@ -8,18 +8,15 @@ import UndoIcon from "@mui/icons-material/Undo";
 import RedoIcon from "@mui/icons-material/Redo";
 import PushPinIcon from "@mui/icons-material/PushPin";
 import { useModalDispatch } from "../../contexts/ModalContext";
-import SearchIcon from "@mui/icons-material/Search";
-import Typography from '@mui/material/Typography';
 import { Note } from "../../types/note";
 import { isChecklistNote, isTextNote } from "../../types/noteTypeGuards";
+import NoteShare from "./NoteShare";
+import { NoteType } from "../../types/noteType";
 
-const NoteSkeleton = ({ note, onReset, onNoteTypeChange, onNoteTitleChange, onPinChange, onSave, onClose, children }:
+const NoteSkeleton = ({ note, dispatch, onSave, onClose, children }:
     {
         note: Note,
-        onReset: () => void,
-        onNoteTypeChange: (newNoteType: "text" | "checklist") => void,
-        onNoteTitleChange: (e: ChangeEvent<HTMLInputElement>) => void,
-        onPinChange: () => void,
+        dispatch: () => void,
         onSave: () => void,
         onClose: () => void,
         children: ReactNode
@@ -38,38 +35,9 @@ const NoteSkeleton = ({ note, onReset, onNoteTypeChange, onNoteTitleChange, onPi
 
     const handleShareModalOpen = () => {
         if (modalDispatch) {
-            modalDispatch({
-                type: "open", title: "Együttműködők", content:
-                    <>
-                        <TextField
-                            variant="outlined"
-                            placeholder="Search..."
-                            size="small"
-                            sx={{
-                                backgroundColor: "#424242", // Dark gray background
-                                borderRadius: "4px",
-                                input: { color: "white" }, // White text color
-                                "& .MuiOutlinedInput-root": {
-                                    "& fieldset": { border: "none" }, // Remove border
-                                },
-                                marginTop: "10px"
-                            }}
-                            InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        <SearchIcon sx={{ color: "white" }} />
-                                    </InputAdornment>
-                                ),
-                            }}
-                        />
-                        <Typography id="transition-modal-description" sx={{ mt: 2 }}>
-                            Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-                        </Typography>
-                    </>
-            });
+            modalDispatch({type: "open", title: "Együttműködők", content: <NoteShare />});
         }
     };
-
 
     const isNoteInputValid = (): boolean => {
         return note.title !== "" ||
@@ -135,9 +103,9 @@ const NoteSkeleton = ({ note, onReset, onNoteTypeChange, onNoteTitleChange, onPi
                             <MenuItem onClick={() => console.log("not implemented yet")}>Címke hozzáadása</MenuItem>
                             {isChecklistNote(note)
                                 ?
-                                <MenuItem onClick={() => { onNoteTypeChange("text"); handleOptionsClose() }}>Váltás szövegdobozra</MenuItem>
+                                <MenuItem onClick={() => { onNoteTypeChange(NoteType.Text); handleOptionsClose() }}>Váltás szövegdobozra</MenuItem>
                                 :
-                                <MenuItem onClick={() => { onNoteTypeChange("checklist"); handleOptionsClose() }}>Váltás listára</MenuItem>
+                                <MenuItem onClick={() => { onNoteTypeChange(NoteType.Checklist); handleOptionsClose() }}>Váltás listára</MenuItem>
                             }
                         </Menu>
                     </Box>

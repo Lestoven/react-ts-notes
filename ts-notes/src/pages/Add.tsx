@@ -3,9 +3,7 @@ import ChecklistPanel from "../components/ChecklistPanel";
 import { Container } from "@mui/material";
 import TriggerNewNote from "../components/add/TriggerNewNote";
 import NewNoteSkeleton from "../components/add/NewNoteSkeleton";
-import { NoteCreationState } from "../types/NoteCreationState";
-import { Checklist } from "../types/Checklist";
-import { NoteCreationData } from "../types/NoteCreationData";
+import { Checklist } from "../types/list";
 import { handleNoteSave, useNotesDispatch } from "../contexts/NotesContext";
 import NoteDescription from "../components/notes/NoteDescription";
 

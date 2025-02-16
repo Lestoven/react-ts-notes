@@ -1,10 +1,11 @@
-import { Note, TextNote, ChecklistNote } from './note';
+import { TextNote, ChecklistNote, NoteCreationData } from './note';
 import { NoteType } from './noteType';
 
-export function isTextNote(note: Note): note is TextNote {
+
+export function isTextNote(note: NoteCreationData): note is TextNote {
     return note.type === NoteType.Text;
 }
 
-export function isChecklistNote(note: Note): note is ChecklistNote {
+export function isChecklistNote(note: NoteCreationData): note is ChecklistNote {
     return note.type === NoteType.Checklist;
 }

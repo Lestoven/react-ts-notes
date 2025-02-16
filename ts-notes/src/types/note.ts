@@ -12,14 +12,18 @@ export interface BaseNote {
     isPinned: boolean
 }
 
-export interface TextNote extends BaseNote {
+interface TextNoteContent {
     type: NoteType.Text,
     content: string
 }
-
-export interface ChecklistNote extends BaseNote {
+interface ChecklistNoteContent {
     type: NoteType.Checklist,
     content: Checklist
 }
 
-export type Note = TextNote | ChecklistNote;
+export type TextNote = BaseNote & TextNoteContent;
+export type ChecklistNote = BaseNote & ChecklistNoteContent;
+
+export type Note = TextNote | ChecklistNote; // Describes a note that is complete (displayed on the UI or arrive from backend)
+export type NoteCreationData 
+    = Omit<BaseNote, 'id' | 'dateCreated' | 'dateUpdated' | 'owner'> & (TextNoteContent | ChecklistNoteContent); // Describes a note that is under construction

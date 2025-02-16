@@ -1,11 +1,10 @@
 import { useReducer, createContext, useContext, ReactNode } from "react";
 import BasicModal from "../components/BasicModal";
-import { ModalData } from "../interfaces/ModalData";
+import { ModalData } from "../types/modal";
 
 type ModalAction =
     | { type: "open", title: string, content: ReactNode }
     | { type: "close" };
-
 
 const ModalContext = createContext<ModalData | undefined>(undefined);
 const ModalDispatchContext = createContext<React.Dispatch<ModalAction> | undefined>(undefined);
