@@ -1,1 +1,2 @@
-export type NoteCreationState = "choosingType" | "noteWithDescription" | "noteWithChecklist";
+import { NoteType } from "./NoteType"
+export type NoteCreationState = "choosingType" | NoteType;

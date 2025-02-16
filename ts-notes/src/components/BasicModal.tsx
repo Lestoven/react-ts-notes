@@ -11,7 +11,7 @@ const style = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 400,
+  width: 600,
   bgcolor: 'black',
   border: '2px solid #000',
   boxShadow: 24,
@@ -20,14 +20,15 @@ const style = {
 };
 
 export default function BasicModal() {
+  const modalData: ModalData = useModal()!;
+  const modalDispatch = useModalDispatch();
+
   const handleClose = () => {
     if (modalDispatch) {
       modalDispatch({type: "close"});
     }
   };
-
-  const modalData: ModalData = useModal()!;
-  const modalDispatch = useModalDispatch();
+  
   return (
     <div>
       <Modal

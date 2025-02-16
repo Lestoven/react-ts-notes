@@ -1,13 +1,13 @@
 import { ChangeEvent, ReactNode, useState } from "react";
 import ChecklistPanel from "../components/ChecklistPanel";
-
-import { Container, TextField } from "@mui/material";
+import { Container } from "@mui/material";
 import TriggerNewNote from "../components/add/TriggerNewNote";
 import NewNoteSkeleton from "../components/add/NewNoteSkeleton";
 import { NoteCreationState } from "../types/NoteCreationState";
 import { Checklist } from "../types/Checklist";
 import { NoteCreationData } from "../types/NoteCreationData";
 import { handleNoteSave, useNotesDispatch } from "../contexts/NotesContext";
+import NoteDescription from "../components/notes/NoteDescription";
 
 /* The invariant of the component:
     * noteCreationState === "noteWithDescription" --> content is string
@@ -110,16 +110,7 @@ const Add = () => {
 
         let noteContent;
         if (newNoteData.noteCreationState === "noteWithDescription") {
-            noteContent = <TextField
-                value={newNoteData.content}
-                variant="standard"
-                placeholder="Jegyzet..."
-                fullWidth
-                multiline
-                InputProps={{ disableUnderline: true }}
-                sx={{ marginTop: 1 }}
-                onChange={handleContentChange}
-            />
+            noteContent = <NoteDescription content={newNoteData.content as string} onContentChange={handleContentChange} />
         } else if (newNoteData.noteCreationState === "noteWithChecklist") {
             noteContent = <ChecklistPanel checklistElements={newNoteData.content as Checklist} onChecklistChange={handleContentChange} />;
         } else {

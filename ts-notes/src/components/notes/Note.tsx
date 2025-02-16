@@ -9,6 +9,7 @@ import { handleNoteUpdate } from "../../contexts/NotesContext";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { useModalDispatch } from "../../contexts/ModalContext";
+import Edit from "../../Edit";
 
 const Note = ({ note }: { note: NoteData }) => {
     const notesDispatch = useNotesDispatch();
@@ -30,7 +31,7 @@ const Note = ({ note }: { note: NoteData }) => {
 
     const handleEditBtnClick = () => {
         if (modalDispatch) {
-            modalDispatch({type: "open", title: "Jegyzet szerkeztése", content: null});
+            modalDispatch({type: "open", title: "Jegyzet szerkeztése", content: <Edit originalNoteData={note}/>});
         }
     };
 
