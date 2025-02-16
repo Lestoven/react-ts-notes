@@ -1,7 +1,9 @@
 import { TextField, Paper, InputAdornment, IconButton } from "@mui/material";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
+import { AddState } from "../../pages/Add";
+import { NoteType } from "../../types/noteType";
 
-const TriggerNewNote = ({onTrigger} : {onTrigger: (newNoteCreationState: NoteCreationState) => void}) => {
+const TriggerNewNote = ({handleAddStateChange} : {handleAddStateChange: (newAddState: AddState) => void}) => {
     return (
         <Paper
             sx={{
@@ -20,10 +22,10 @@ const TriggerNewNote = ({onTrigger} : {onTrigger: (newNoteCreationState: NoteCre
                 InputProps={{
                     disableUnderline: true,
                 }}
-                onFocus={() => onTrigger("noteWithDescription")}
+                onFocus={() => handleAddStateChange(NoteType.Text)}
             />
             <InputAdornment position="end">
-                <IconButton onClick={() => onTrigger("noteWithChecklist")}>
+                <IconButton onClick={() => handleAddStateChange(NoteType.Checklist)}>
                     <CheckBoxIcon />
                 </IconButton>
 

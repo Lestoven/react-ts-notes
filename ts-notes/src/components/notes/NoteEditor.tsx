@@ -6,7 +6,6 @@ import NoteSkeleton from "./NoteSkeleton";
 import { NoteType } from "../../types/noteType";
 import { convertChecklistToDescription, convertDescriptionToChecklist } from "../../utils/noteUtils";
 import { isChecklistNote, isTextNote } from "../../types/noteTypeGuards";
-import { Container } from "@mui/material";
 import { NoteData, NoteAction } from "../../types/noteAction";
 
 const NoteEditor = <T extends NoteData>({ defaultNoteData, onSave, onClose }:
@@ -22,8 +21,8 @@ const NoteEditor = <T extends NoteData>({ defaultNoteData, onSave, onClose }:
         if (isTextNote(note)) {
             noteContent = <NoteDescription content={note.content} dispatch={dispatch} />
         } else if (isChecklistNote(note)) {
-            noteContent = <ChecklistPanel checklistElements={note.content} 
-            onChecklistChange={(newContent: Checklist) => dispatch({ type: "contentChange", newContent: newContent, noteType: NoteType.Checklist })} />;
+            noteContent = <ChecklistPanel checklistElements={note.content}
+                onChecklistChange={(newContent: Checklist) => dispatch({ type: "contentChange", newContent: newContent, noteType: NoteType.Checklist })} />;
         }
 
         return (
@@ -32,7 +31,7 @@ const NoteEditor = <T extends NoteData>({ defaultNoteData, onSave, onClose }:
                 dispatch={dispatch}
                 onSave={() => onSave(note as T)}
                 onClose={onClose}
-                onReset={() => dispatch({type: "reset", defaultNoteData: defaultNoteData})}
+                onReset={() => dispatch({ type: "reset", defaultNoteData: defaultNoteData })}
             >
                 {noteContent}
             </NoteSkeleton>
@@ -40,16 +39,9 @@ const NoteEditor = <T extends NoteData>({ defaultNoteData, onSave, onClose }:
     };
 
     return (
-        <Container
-            sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                marginTop: "40px"
-            }}
-        >
+        <>
             {getContent()}
-        </Container>
+        </>
     );
 };
 

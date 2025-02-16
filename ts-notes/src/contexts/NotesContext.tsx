@@ -1,6 +1,6 @@
 import React, { createContext, ReactNode, useContext, useEffect, useReducer, useState } from "react";
 import { getNotes } from "../serverRequests/getNotes";
-import { Note } from "../types/note";
+import { Note, NoteCreationData } from "../types/note";
 
 import { saveNote } from "../serverRequests/saveNote";
 import { toast, Slide } from 'react-toastify';
@@ -71,7 +71,7 @@ function notesReducer(notes: Note[], action: NotesAction): Note[] {
     };
 };
 
-export async function handleNoteSave(newNote: Note, dispatch: React.Dispatch<NotesAction>) {
+export async function handleNoteSave(newNote: NoteCreationData, dispatch: React.Dispatch<NotesAction>) {
     const noteData = {
         ...newNote,
         id: -Date.now(), // generate temporary id

@@ -1,134 +1,60 @@
-import { ChangeEvent, ReactNode, useState } from "react";
-import ChecklistPanel from "../components/ChecklistPanel";
-import { Container } from "@mui/material";
-import TriggerNewNote from "../components/add/TriggerNewNote";
-import NewNoteSkeleton from "../components/add/NewNoteSkeleton";
-import { Checklist } from "../types/list";
 import { handleNoteSave, useNotesDispatch } from "../contexts/NotesContext";
-import NoteDescription from "../components/notes/NoteTextInput";
+import { NoteCreationData } from "../types/note";
+import { NoteType } from "../types/noteType";
+import { Container } from "@mui/material";
+import NoteEditor from "../components/notes/NoteEditor";
+import { ReactNode, useState } from "react";
+import TriggerNewNote from "../components/add/TriggerNewNote";
 
-/* The invariant of the component:
-    * noteCreationState === "noteWithDescription" --> content is string
-    * noteCreationState === "noteWithChecklist" --> content is Checklist (array of ChecklistElement)
-*/
+export type AddState = "idle" | NoteType.Text | NoteType.Checklist;
 const Add = () => {
-    const defaultNewNoteData: NoteCreationData = {
-        noteCreationState: "choosingType",
+    const defaultNoteDataTemplate: NoteCreationData & { addState: AddState } = {
+        addState: "idle",
         title: "",
+        type: NoteType.Text,
         content: "",
         shared_with: [], // userids
         color: "white",
         isPinned: false
     };
 
-    const [newNoteData, setNewNoteData] = useState<NoteCreationData>(defaultNewNoteData);
+    const [defaultNoteData, setDefaultNoteData] = useState<NoteCreationData & { addState: AddState }>(defaultNoteDataTemplate);
     const notesDispatch = useNotesDispatch();
 
-    /* Utility function to convert the content of a Checklist to description*/
-    const convertChecklistToDescription = () => {
-        return (newNoteData.content as Checklist).map(c => c["content"]).join("\n");
-    };
-    /* Utility function to convert the content of a description to a Checklist*/
-    const convertDescriptionToChecklist = () => {
-        return (newNoteData.content as string).split("\n").map(
-            txt => {
-                return {
-                    id: crypto.randomUUID(),
-                    content: txt,
-                    isChecked: false
-                }
-            });
-    }
-
-    const handleNoteCreationStateChange = (newNoteCreationState: NoteCreationState) => {
-        let content: NoteCreationData["content"] = newNoteData.content; // use the previous value by default
-
-        if (newNoteData.content.length > 0) { // if content was previously entered
-            if (newNoteData.noteCreationState === "choosingType") {
-                if (newNoteCreationState === "noteWithDescription" && Array.isArray(newNoteData.content)) {
-                    content = convertChecklistToDescription();
-                } else if (newNoteCreationState === "noteWithChecklist" && !Array.isArray(newNoteData.content)) {
-                    content = convertDescriptionToChecklist();
-                }
-            } else if (newNoteData.noteCreationState === "noteWithChecklist" && newNoteCreationState === "noteWithDescription") {
-                content = convertChecklistToDescription();
-            } else if (newNoteData.noteCreationState === "noteWithDescription" && newNoteCreationState === "noteWithChecklist") {
-                content = convertDescriptionToChecklist();
-            }
+    const handleAddStateChange = (newAddState: AddState) => {
+        if (newAddState === "idle") {
+            setDefaultNoteData(defaultNoteDataTemplate);
+        } else if (newAddState === NoteType.Text) {
+            setDefaultNoteData({ ...defaultNoteData, addState: newAddState, type: NoteType.Text, content: "" });
         } else {
-            content = newNoteCreationState === "noteWithDescription" ? "" : []; // set content to the default empty (depeding on the type of the note)
-        }
-
-        setNewNoteData({ ...newNoteData, content: content, noteCreationState: newNoteCreationState }); // set the new noteState with the updated content
-    };
-
-    const handleNoteTitleChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setNewNoteData({ ...newNoteData, title: e.target.value });
-    }
-
-    function handleContentChange(newContent: ChangeEvent<HTMLInputElement>): void
-    function handleContentChange(newContent: Checklist): void
-    function handleContentChange(newContent: ChangeEvent<HTMLInputElement> | Checklist) {
-        if ('target' in newContent) {
-            setNewNoteData({ ...newNoteData, content: newContent.target.value });
-        } else {
-            setNewNoteData({ ...newNoteData, content: newContent });
+            setDefaultNoteData({ ...defaultNoteData, addState: newAddState, type: NoteType.Checklist, content: [] });
         }
     }
 
-    const handlePinChange = () => {
-        setNewNoteData({ ...newNoteData, isPinned: !newNoteData.isPinned });
-    }
-
-    const handleNoteDataReset = () => {
-        if (newNoteData.noteCreationState === "noteWithDescription") {
-            setNewNoteData({ ...defaultNewNoteData, noteCreationState: "noteWithDescription", content: "" });
-        } else if (newNoteData.noteCreationState === "noteWithChecklist") {
-            setNewNoteData({ ...defaultNewNoteData, noteCreationState: "noteWithChecklist", content: [] });
-        } else {
-            throw new Error(`Unexpected noteCreationState: ${newNoteData.noteCreationState}`)
-        }
-    };
-
-    async function handleSave() {
+    async function handleSave(noteData: NoteCreationData) {
         if (notesDispatch) {
             // reset the Note input
-            setNewNoteData(defaultNewNoteData);
+            handleAddStateChange("idle");
 
-            await handleNoteSave(newNoteData, notesDispatch);
+            await handleNoteSave(noteData, notesDispatch);
         }
+    };
+
+    const handleClose = () => {
+        handleAddStateChange("idle");
     };
 
     const getContent = (): ReactNode => {
-        if (newNoteData.noteCreationState === "choosingType") {
+        if (defaultNoteData.addState === "idle") {
             return (
-                <TriggerNewNote onTrigger={handleNoteCreationStateChange} />
+                <TriggerNewNote handleAddStateChange={handleAddStateChange} />
+            );
+        } else {
+            return (
+                <NoteEditor defaultNoteData={defaultNoteData} onSave={handleSave} onClose={handleClose} />
             );
         }
-
-        let noteContent;
-        if (newNoteData.noteCreationState === "noteWithDescription") {
-            noteContent = <NoteDescription content={newNoteData.content as string} onContentChange={handleContentChange} />
-        } else if (newNoteData.noteCreationState === "noteWithChecklist") {
-            noteContent = <ChecklistPanel checklistElements={newNoteData.content as Checklist} onChecklistChange={handleContentChange} />;
-        } else {
-            const _exhaustiveCheck: never = newNoteData.noteCreationState;
-            return _exhaustiveCheck;
-        }
-
-        return (
-            <NewNoteSkeleton
-                newNoteData={newNoteData}
-                onReset={handleNoteDataReset}
-                onNoteCreationStateChange={handleNoteCreationStateChange}
-                onNoteTitleChange={handleNoteTitleChange}
-                onPinChange={handlePinChange}
-                onSave={handleSave}
-            >
-                {noteContent}
-            </NewNoteSkeleton>
-        );
-    };
+    }
 
     return (
         <Container

@@ -7,8 +7,6 @@ const Edit = ({ defaultNoteData }: { defaultNoteData: Note }) => {
     const modalDispatch = useModalDispatch();
     const notesDispatch = useNotesDispatch();
 
-    //const handleReset = () => setNoteData(originalNoteData);
-    
     const handleSave = (noteData: Note) => {
         if (notesDispatch) {
             handleClose();
