@@ -2,6 +2,7 @@ import { Note } from "../types/note";
 import { useModalDispatch } from "../contexts/ModalContext";
 import { useNotesDispatch, handleNoteUpdate } from "../contexts/NotesContext";
 import NoteEditor from "../components/notes/NoteEditor";
+import { Container } from "@mui/material";
 
 const Edit = ({ defaultNoteData }: { defaultNoteData: Note }) => {
     const modalDispatch = useModalDispatch();
@@ -20,7 +21,15 @@ const Edit = ({ defaultNoteData }: { defaultNoteData: Note }) => {
         }
     };
     return (
-       <NoteEditor defaultNoteData={defaultNoteData} onSave={handleSave} onClose={handleClose}/>
+        <Container
+            sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+            }}
+        >
+            <NoteEditor defaultNoteData={defaultNoteData} onSave={handleSave} onClose={handleClose} />
+        </Container>
     );
 };
 

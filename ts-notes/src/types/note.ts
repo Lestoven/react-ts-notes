@@ -1,5 +1,5 @@
 import { Checklist } from "./list"
-import { NoteType } from "./noteType"
+import { NoteType } from "./noteType";
 
 export interface BaseNote {
     readonly id: number,
