@@ -1,6 +1,6 @@
-import { useReducer, ReactNode, ChangeEvent } from "react";
+import { useReducer, ReactNode } from "react";
 import { Checklist } from "../../types/list";
-import NoteDescription from "./NoteDescription";
+import NoteDescription from "./NoteTextInput";
 import ChecklistPanel from "../ChecklistPanel";
 import NoteSkeleton from "./NoteSkeleton";
 import { NoteType } from "../../types/noteType";
@@ -8,7 +8,6 @@ import { convertChecklistToDescription, convertDescriptionToChecklist } from "..
 import { isChecklistNote, isTextNote } from "../../types/noteTypeGuards";
 import { Container } from "@mui/material";
 import { NoteData, NoteAction } from "../../types/noteAction";
-
 
 const NoteEditor = <T extends NoteData>({ defaultNoteData, onSave, onClose }:
     {
@@ -18,20 +17,13 @@ const NoteEditor = <T extends NoteData>({ defaultNoteData, onSave, onClose }:
     }) => {
     const [note, dispatch] = useReducer(noteReducer, defaultNoteData);
 
-    const handleContentChange = (newContent: ChangeEvent<HTMLInputElement> | Checklist) => {
-        if ("target" in newContent) {
-            dispatch({ type: "contentChange", newContent: newContent.target.value, noteType: NoteType.Text });
-        } else {
-            dispatch({ type: "contentChange", newContent: newContent, noteType: NoteType.Checklist });
-        }
-    }
-
     const getContent = (): ReactNode => {
         let noteContent;
         if (isTextNote(note)) {
-            noteContent = <NoteDescription content={note.content} onContentChange={handleContentChange} />
+            noteContent = <NoteDescription content={note.content} dispatch={dispatch} />
         } else if (isChecklistNote(note)) {
-            noteContent = <ChecklistPanel checklistElements={note.content} onChecklistChange={handleContentChange} />;
+            noteContent = <ChecklistPanel checklistElements={note.content} 
+            onChecklistChange={(newContent: Checklist) => dispatch({ type: "contentChange", newContent: newContent, noteType: NoteType.Checklist })} />;
         }
 
         return (
@@ -40,6 +32,7 @@ const NoteEditor = <T extends NoteData>({ defaultNoteData, onSave, onClose }:
                 dispatch={dispatch}
                 onSave={() => onSave(note as T)}
                 onClose={onClose}
+                onReset={() => dispatch({type: "reset", defaultNoteData: defaultNoteData})}
             >
                 {noteContent}
             </NoteSkeleton>

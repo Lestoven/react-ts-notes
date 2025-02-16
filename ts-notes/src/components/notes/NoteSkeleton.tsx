@@ -12,12 +12,13 @@ import NoteShare from "./NoteShare";
 import { NoteType } from "../../types/noteType";
 import { NoteData, NoteAction } from "../../types/noteAction";
 
-const NoteSkeleton = ({ note, dispatch, onSave, onClose, children }:
+const NoteSkeleton = ({ note, dispatch, onSave, onClose, onReset, children }:
     {
         note: NoteData,
         dispatch: React.Dispatch<NoteAction>,
         onSave: () => void,
         onClose: () => void,
+        onReset: () => void,
         children: ReactNode
     }) => {
     const [optionsAnchor, setOptionsAnchor] = useState<null | HTMLElement>(null);
@@ -48,7 +49,6 @@ const NoteSkeleton = ({ note, dispatch, onSave, onClose, children }:
     const handlePin = () => { dispatch({ type: "pinChange" }); };
     const handleSwitchToTextNote = () => { dispatch({ type: "typeChange", newType: NoteType.Text }); handleOptionsClose() };
     const handleSwitchToChecklistNote = () => { dispatch({ type: "typeChange", newType: NoteType.Checklist }); handleOptionsClose() };
-    //const onReset = () => { dispatch({type: "reset", }) }; 
     return (
         <>
             <Paper
@@ -113,7 +113,7 @@ const NoteSkeleton = ({ note, dispatch, onSave, onClose, children }:
                     </Box>
 
                     <Box>
-                        <Button variant="text" sx={{ color: "blue" }} onClick={() => console.log("yet to impplement")}>Alaphelyzet</Button>
+                        <Button variant="text" sx={{ color: "blue" }} onClick={onReset}>Alaphelyzet</Button>
                         <Button variant="text" sx={{ color: "black" }} onClick={onClose}>Bezárás</Button>
                         <Button variant="text" sx={{ color: "green" }} onClick={onSave}
                             disabled={!isNoteInputValid()}>Mentés</Button>

@@ -5,7 +5,7 @@ import TriggerNewNote from "../components/add/TriggerNewNote";
 import NewNoteSkeleton from "../components/add/NewNoteSkeleton";
 import { Checklist } from "../types/list";
 import { handleNoteSave, useNotesDispatch } from "../contexts/NotesContext";
-import NoteDescription from "../components/notes/NoteDescription";
+import NoteDescription from "../components/notes/NoteTextInput";
 
 /* The invariant of the component:
     * noteCreationState === "noteWithDescription" --> content is string
