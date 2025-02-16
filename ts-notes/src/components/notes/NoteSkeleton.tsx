@@ -1,5 +1,4 @@
-import { ReactNode, useState } from "react";
-import { ChangeEvent, MouseEvent } from "react";
+import { ReactNode, useState, MouseEvent } from "react";
 import { TextField, Paper, IconButton, Box, Button, Menu, MenuItem } from "@mui/material";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import PaletteIcon from "@mui/icons-material/Palette";
@@ -8,34 +7,32 @@ import UndoIcon from "@mui/icons-material/Undo";
 import RedoIcon from "@mui/icons-material/Redo";
 import PushPinIcon from "@mui/icons-material/PushPin";
 import { useModalDispatch } from "../../contexts/ModalContext";
-import { Note } from "../../types/note";
 import { isChecklistNote, isTextNote } from "../../types/noteTypeGuards";
 import NoteShare from "./NoteShare";
 import { NoteType } from "../../types/noteType";
+import { NoteData, NoteAction } from "../../types/noteAction";
 
 const NoteSkeleton = ({ note, dispatch, onSave, onClose, children }:
     {
-        note: Note,
-        dispatch: () => void,
+        note: NoteData,
+        dispatch: React.Dispatch<NoteAction>,
         onSave: () => void,
         onClose: () => void,
         children: ReactNode
     }) => {
     const [optionsAnchor, setOptionsAnchor] = useState<null | HTMLElement>(null);
-
     const modalDispatch = useModalDispatch();
 
     const handleOptionsOpen = (event: MouseEvent<HTMLElement>) => {
         setOptionsAnchor(event.currentTarget);
     };
-
     const handleOptionsClose = () => {
         setOptionsAnchor(null);
     };
 
     const handleShareModalOpen = () => {
         if (modalDispatch) {
-            modalDispatch({type: "open", title: "Együttműködők", content: <NoteShare />});
+            modalDispatch({ type: "open", title: "Együttműködők", content: <NoteShare /> });
         }
     };
 
@@ -47,6 +44,11 @@ const NoteSkeleton = ({ note, dispatch, onSave, onClose, children }:
             );
     };
 
+    const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {dispatch({ type: "titleChange", newTitle: e.target.value })};
+    const handlePin = () => { dispatch({ type: "pinChange" }); };
+    const handleSwitchToTextNote = () => { dispatch({ type: "typeChange", newType: NoteType.Text }); handleOptionsClose() };
+    const handleSwitchToChecklistNote = () => { dispatch({ type: "typeChange", newType: NoteType.Checklist }); handleOptionsClose() };
+    //const onReset = () => { dispatch({type: "reset", }) }; 
     return (
         <>
             <Paper
@@ -61,8 +63,8 @@ const NoteSkeleton = ({ note, dispatch, onSave, onClose, children }:
             >
                 <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     <TextField value={note.title} variant="standard" placeholder="Cím" autoComplete="off"
-                        fullWidth InputProps={{ disableUnderline: true }} onChange={onNoteTitleChange} />
-                    <IconButton onClick={onPinChange}>
+                        fullWidth InputProps={{ disableUnderline: true }} onChange={handleTitleChange} />
+                    <IconButton onClick={handlePin}>
                         <PushPinIcon color={note.isPinned ? "primary" : "inherit"} />
                     </IconButton>
                 </Box>
@@ -103,15 +105,15 @@ const NoteSkeleton = ({ note, dispatch, onSave, onClose, children }:
                             <MenuItem onClick={() => console.log("not implemented yet")}>Címke hozzáadása</MenuItem>
                             {isChecklistNote(note)
                                 ?
-                                <MenuItem onClick={() => { onNoteTypeChange(NoteType.Text); handleOptionsClose() }}>Váltás szövegdobozra</MenuItem>
+                                <MenuItem onClick={handleSwitchToTextNote}>Váltás szövegdobozra</MenuItem>
                                 :
-                                <MenuItem onClick={() => { onNoteTypeChange(NoteType.Checklist); handleOptionsClose() }}>Váltás listára</MenuItem>
+                                <MenuItem onClick={handleSwitchToChecklistNote}>Váltás listára</MenuItem>
                             }
                         </Menu>
                     </Box>
 
                     <Box>
-                        <Button variant="text" sx={{ color: "blue" }} onClick={onReset}>Alaphelyzet</Button>
+                        <Button variant="text" sx={{ color: "blue" }} onClick={() => console.log("yet to impplement")}>Alaphelyzet</Button>
                         <Button variant="text" sx={{ color: "black" }} onClick={onClose}>Bezárás</Button>
                         <Button variant="text" sx={{ color: "green" }} onClick={onSave}
                             disabled={!isNoteInputValid()}>Mentés</Button>

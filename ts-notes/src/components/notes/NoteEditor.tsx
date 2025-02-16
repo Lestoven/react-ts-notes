@@ -3,24 +3,19 @@ import { Checklist } from "../../types/list";
 import NoteDescription from "./NoteDescription";
 import ChecklistPanel from "../ChecklistPanel";
 import NoteSkeleton from "./NoteSkeleton";
-import { Note, NoteCreationData, TextNote, ChecklistNote } from "../../types/note";
 import { NoteType } from "../../types/noteType";
 import { convertChecklistToDescription, convertDescriptionToChecklist } from "../../utils/noteUtils";
 import { isChecklistNote, isTextNote } from "../../types/noteTypeGuards";
 import { Container } from "@mui/material";
-
-type NoteData = Note | NoteCreationData;
-
-type NoteAction =
-    | { type: "reset", defaultNoteData: NoteData }
-    | { type: "typeChange", newType: NoteType }
-    | { type: "titleChange", newTitle: string }
-    | { type: "contentChange"; newContent: TextNote["content"]; noteType: NoteType.Text }
-    | { type: "contentChange"; newContent: ChecklistNote["content"]; noteType: NoteType.Checklist }
-    | { type: "pinChange" };
+import { NoteData, NoteAction } from "../../types/noteAction";
 
 
-const NoteEditor = ({ defaultNoteData, onSave, onClose }: { defaultNoteData: NoteData, onSave: () => void, onClose: () => void }) => {
+const NoteEditor = ({ defaultNoteData, onSave, onClose }:
+    {
+        defaultNoteData: NoteData,
+        onSave: () => void,
+        onClose: () => void
+    }) => {
     const [note, dispatch] = useReducer(noteReducer, defaultNoteData);
 
     const handleContentChange = (newContent: ChangeEvent<HTMLInputElement> | Checklist) => {
@@ -37,20 +32,14 @@ const NoteEditor = ({ defaultNoteData, onSave, onClose }: { defaultNoteData: Not
             noteContent = <NoteDescription content={note.content} onContentChange={handleContentChange} />
         } else if (isChecklistNote(note)) {
             noteContent = <ChecklistPanel checklistElements={note.content} onChecklistChange={handleContentChange} />;
-        } else {
-            const _exhaustiveCheck: never = noteData;
-            return _exhaustiveCheck;
         }
 
         return (
             <NoteSkeleton
-                noteData={noteData}
-                onReset={handleReset}
-                onNoteTypeChange={onNoteTypeChange}
-                onNoteTitleChange={handleNoteTitleChange}
-                onPinChange={handlePinChange}
-                onClose={handleClose}
-                onSave={handleSave}
+                note={note}
+                dispatch={dispatch}
+                onSave={onSave}
+                onClose={onClose}
             >
                 {noteContent}
             </NoteSkeleton>
