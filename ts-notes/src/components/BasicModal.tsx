@@ -4,7 +4,7 @@ import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
 import Typography from '@mui/material/Typography';
 import { useModal, useModalDispatch } from '../contexts/ModalContext';
-import { ModalData } from '../interfaces/ModalData';
+import { ModalData } from '../types/modal';
 
 const style = {
   position: 'absolute',

@@ -1,7 +1,7 @@
 import { TextField, Box, Checkbox, Typography, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { ChangeEvent } from "react";
-import { Checklist } from "../types/Checklist";
+import { Checklist } from "../types/list";
 
 const ChecklistPanel = ({ checklistElements, onChecklistChange }:
     { checklistElements: Checklist, onChecklistChange: (newContent: Checklist) => void }) => {

@@ -1,7 +1,7 @@
-import { NoteData } from "../interfaces/NoteData";
+import { Note } from "../types/note";
 
-// saves the note and returns the NoteData with the generated "id" included
-export async function updateNote(newNoteData: NoteData) {
+// updated the note
+export async function updateNote(newNoteData: Note) {
     const noteId: number = newNoteData.id;
     // save noteData    
     await updateNoteOnServer(2000);

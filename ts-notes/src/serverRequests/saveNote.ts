@@ -1,7 +1,7 @@
-import { NoteData } from "../interfaces/NoteData";
+import { Note } from "../types/note";
 
 // saves the note and returns the NoteData with the generated "id" included
-export async function saveNote(newNoteData: Omit<NoteData, "id">): Promise<NoteData> {
+export async function saveNote(newNoteData: Omit<Note, "id">): Promise<Note> {
     // save noteData
     await saveNoteOnServer(2000);
     

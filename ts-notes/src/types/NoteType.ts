@@ -1,1 +1,4 @@
-export type NoteType = "noteWithDescription" | "noteWithChecklist";
+export enum NoteType {
+    Text = 'text',
+    Checklist = 'checklist'
+};

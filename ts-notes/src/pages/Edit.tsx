@@ -1,10 +1,8 @@
 import NoteSkeleton from "../components/edit/NoteSkeleton";
-import { NoteData } from "../interfaces/NoteData";
-import { isNoteContentList } from "../utils/isNoteContentList";
+import { Note } from "../types/note";
 import { ReactNode, useState } from "react";
-import { Checklist } from "../types/Checklist";
+import { Checklist } from "../types/list";
 import ChecklistPanel from "../components/ChecklistPanel";
-import { NoteType } from "../types/NoteType";
 import { Container } from "@mui/material";
 import NoteDescription from "../components/notes/NoteDescription";
 import { ChangeEvent } from "react";
@@ -12,7 +10,7 @@ import { useModalDispatch } from "../contexts/ModalContext";
 import { handleNoteUpdate } from "../contexts/NotesContext";
 import { useNotesDispatch } from "../contexts/NotesContext";
 
-const Edit = ({ originalNoteData }: { originalNoteData: NoteData }) => {
+const Edit = ({ originalNoteData }: { originalNoteData: Note }) => {
     const [noteData, setNoteData] = useState(originalNoteData);
     const modalDispatch = useModalDispatch();
     const notesDispatch = useNotesDispatch();

@@ -1,9 +1,11 @@
-import { NoteData } from "../interfaces/NoteData";
+import { Note } from "../types/note";
+import { NoteType } from "../types/noteType";
 
-export async function getNotes(): Promise<NoteData[]> {
+export async function getNotes(): Promise<Note[]> {
     await getNotesData(200);
     return [{
         id: 0,
+        type: NoteType.Text,
         title: "New Note",
         content: "this is crazy",
         shared_with: [], // userids
@@ -15,6 +17,7 @@ export async function getNotes(): Promise<NoteData[]> {
     },
     {
         id: 1,
+        type: NoteType.Checklist,
         title: "Note Title",
         content: [{ id: "id1", content: "item1", isChecked: true }, 
             { id: "id2", content: "item2", isChecked: true }, 
@@ -28,6 +31,7 @@ export async function getNotes(): Promise<NoteData[]> {
     },
     {
         id: 2,
+        type: NoteType.Text,
         title: "Fresh Note",
         content: "wow!",
         shared_with: [], // userids

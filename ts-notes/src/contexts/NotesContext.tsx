@@ -1,7 +1,6 @@
 import React, { createContext, ReactNode, useContext, useEffect, useReducer, useState } from "react";
 import { getNotes } from "../serverRequests/getNotes";
-import { NoteData } from "../interfaces/NoteData";
-import { NewNoteData } from "../interfaces/NewNoteData";
+import { Note } from "../types/note";
 
 import { saveNote } from "../serverRequests/saveNote";
 import { toast, Slide } from 'react-toastify';
@@ -9,23 +8,23 @@ import { getCurrentUserID } from "../serverRequests/getCurrentUserID";
 import { updateNote } from "../serverRequests/updateNote";
 
 type NotesAction =
-    | { type: "set"; payload: NoteData[] }
-    | { type: "create"; payload: NoteData }
-    | { type: "update"; payload: NoteData }
+    | { type: "set"; payload: Note[] }
+    | { type: "create"; payload: Note }
+    | { type: "update"; payload: Note }
     | { type: "delete"; payload: { id: number } };
 
-const NotesContext = createContext<{ notes: NoteData[], isLoading: boolean } | undefined>(undefined);
+const NotesContext = createContext<{ notes: Note[], isLoading: boolean } | undefined>(undefined);
 const NotesDispatchContext = createContext<React.Dispatch<NotesAction> | undefined>(undefined);
 
 const NotesProvider = ({ children }: { children: ReactNode }) => {
-    const initialNotes: NoteData[] = [];
+    const initialNotes: Note[] = [];
 
     const [notes, dispatch] = useReducer(notesReducer, initialNotes);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         async function fetchNotes() {
-            const notesData: NoteData[] = await getNotes();
+            const notesData: Note[] = await getNotes();
             dispatch({ type: "set", payload: notesData });
             setIsLoading(false);
         };
@@ -51,7 +50,7 @@ export function useNotesDispatch() {
     return useContext(NotesDispatchContext);
 };
 
-function notesReducer(notes: NoteData[], action: NotesAction): NoteData[] {
+function notesReducer(notes: Note[], action: NotesAction): Note[] {
     switch (action.type) {
         case 'set': {
             return action.payload;
@@ -72,7 +71,7 @@ function notesReducer(notes: NoteData[], action: NotesAction): NoteData[] {
     };
 };
 
-export async function handleNoteSave(newNote: NewNoteData, dispatch: React.Dispatch<NotesAction>) {
+export async function handleNoteSave(newNote: Note, dispatch: React.Dispatch<NotesAction>) {
     const noteData = {
         ...newNote,
         id: -Date.now(), // generate temporary id
@@ -108,7 +107,7 @@ export async function handleNoteSave(newNote: NewNoteData, dispatch: React.Dispa
     }
 };
 
-export async function handleNoteUpdate(updatedNote: NoteData, dispatch: React.Dispatch<NotesAction>) {
+export async function handleNoteUpdate(updatedNote: Note, dispatch: React.Dispatch<NotesAction>) {
     dispatch({
         type: 'update',
         payload: updatedNote

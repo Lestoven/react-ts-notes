@@ -1,15 +1,16 @@
 import { Paper, IconButton, Box, Typography, Divider } from "@mui/material";
 import PushPinIcon from "@mui/icons-material/PushPin";
-import ChecklistPanel from "../ChecklistPanel";
-import { Checklist, Checklist as NodeChecklist } from "../../types/Checklist";
+import { Checklist } from "../../types/list";
 import Grid from "@mui/material/Grid";
-import { NoteData } from "../../interfaces/NoteData";
+import { Note as NoteData} from "../../types/note";
 import { useNotesDispatch } from "../../contexts/NotesContext";
 import { handleNoteUpdate } from "../../contexts/NotesContext";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { useModalDispatch } from "../../contexts/ModalContext";
 import Edit from "../../pages/Edit";
+import { renderNoteContent } from "../../utils/renderNoteContent";
+import { NoteType } from "../../types/noteType";
 
 const Note = ({ note }: { note: NoteData }) => {
     const notesDispatch = useNotesDispatch();
@@ -17,7 +18,7 @@ const Note = ({ note }: { note: NoteData }) => {
 
     const handleCheckListChange = (updatedList: Checklist) => {
         if (notesDispatch) {
-            const updatedNote = { ...note, content: updatedList };
+            const updatedNote: NoteData = { ...note, type: NoteType.Checklist, content: updatedList };
             handleNoteUpdate(updatedNote, notesDispatch);
         }
     };
@@ -38,6 +39,7 @@ const Note = ({ note }: { note: NoteData }) => {
     const handleDeleteBtnClick = () => {
 
     };
+
 
     return (
         <Grid item xs={12} sm={6} md={4} key={note.id}>
@@ -69,11 +71,7 @@ const Note = ({ note }: { note: NoteData }) => {
                 </Box>
                 <Divider sx={{ marginY: 1 }} />
                 <Box sx={{ marginTop: 1 }}>
-                    {typeof note.content === "string" ? (
-                        <Typography variant="body2">{note.content}</Typography>
-                    ) : (
-                        <ChecklistPanel checklistElements={note.content as NodeChecklist} onChecklistChange={handleCheckListChange} />
-                    )}
+                    {renderNoteContent(note, handleCheckListChange)}
                 </Box>
 
                 <Box

@@ -1,4 +1,4 @@
-import { NoteData } from "../interfaces/NoteData";
+import { Note } from "../types/note";
 import Notes from "../components/notes/Notes";
 import { Container } from "@mui/material";
 import { useNotes } from "../contexts/NotesContext";
@@ -6,7 +6,7 @@ import { Box, CircularProgress } from '@mui/material';
 import Add from "./Add";
 
 const Home = () => {    
-    const {notes: notesData, isLoading}: {notes: NoteData[], isLoading: boolean} = useNotes()!;
+    const {notes: notesData, isLoading}: {notes: Note[], isLoading: boolean} = useNotes()!;
     if (isLoading) {
         return (
             <Box

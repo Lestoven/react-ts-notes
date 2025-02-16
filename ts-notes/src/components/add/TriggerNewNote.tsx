@@ -1,6 +1,5 @@
 import { TextField, Paper, InputAdornment, IconButton } from "@mui/material";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
-import { NoteCreationState } from "../../types/NoteCreationState";
 
 const TriggerNewNote = ({onTrigger} : {onTrigger: (newNoteCreationState: NoteCreationState) => void}) => {
     return (

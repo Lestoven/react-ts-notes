@@ -7,20 +7,17 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import UndoIcon from "@mui/icons-material/Undo";
 import RedoIcon from "@mui/icons-material/Redo";
 import PushPinIcon from "@mui/icons-material/PushPin";
-import { List } from "../../types/List";
 import { useModalDispatch } from "../../contexts/ModalContext";
 import SearchIcon from "@mui/icons-material/Search";
 import Typography from '@mui/material/Typography';
-import { NoteData } from "../../interfaces/NoteData";
-import { NoteType } from "../../types/NoteType";
-import { NewNoteData } from "../../interfaces/NewNoteData";
-import { isNoteContentList } from "../../utils/isNoteContentList";
+import { Note } from "../../types/note";
+import { isChecklistNote, isTextNote } from "../../types/noteTypeGuards";
 
-const NoteSkeleton = ({ noteData, onReset, onNoteTypeChange, onNoteTitleChange, onPinChange, onSave, onClose, children }:
+const NoteSkeleton = ({ note, onReset, onNoteTypeChange, onNoteTitleChange, onPinChange, onSave, onClose, children }:
     {
-        noteData: NoteData | NewNoteData,
+        note: Note,
         onReset: () => void,
-        onNoteTypeChange: (newNoteType: NoteType) => void,
+        onNoteTypeChange: (newNoteType: "text" | "checklist") => void,
         onNoteTitleChange: (e: ChangeEvent<HTMLInputElement>) => void,
         onPinChange: () => void,
         onSave: () => void,
@@ -73,12 +70,12 @@ const NoteSkeleton = ({ noteData, onReset, onNoteTypeChange, onNoteTitleChange, 
         }
     };
 
-    
+
     const isNoteInputValid = (): boolean => {
-        return noteData.title !== "" ||
+        return note.title !== "" ||
             (
-                (!isNoteContentList(noteData) && noteData.content.length > 0) ||
-                (isNoteContentList(noteData) && (noteData.content as unknown as List).some(e => e.content.length > 0))
+                (isTextNote(note) && note.content.length > 0) ||
+                (isChecklistNote(note) && note.content.some(e => e.content.length > 0))
             );
     };
 
@@ -95,10 +92,10 @@ const NoteSkeleton = ({ noteData, onReset, onNoteTypeChange, onNoteTitleChange, 
                 elevation={3}
             >
                 <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <TextField value={noteData.title} variant="standard" placeholder="Cím" autoComplete="off"
+                    <TextField value={note.title} variant="standard" placeholder="Cím" autoComplete="off"
                         fullWidth InputProps={{ disableUnderline: true }} onChange={onNoteTitleChange} />
                     <IconButton onClick={onPinChange}>
-                        <PushPinIcon color={noteData.isPinned ? "primary" : "inherit"} />
+                        <PushPinIcon color={note.isPinned ? "primary" : "inherit"} />
                     </IconButton>
                 </Box>
 
@@ -136,10 +133,11 @@ const NoteSkeleton = ({ noteData, onReset, onNoteTypeChange, onNoteTitleChange, 
                             }}
                         >
                             <MenuItem onClick={() => console.log("not implemented yet")}>Címke hozzáadása</MenuItem>
-                            {isNoteContentList(noteData) ?
-                                <MenuItem onClick={() => { onNoteTypeChange("noteWithDescription"); handleOptionsClose() }}>Váltás szövegdobozra</MenuItem>
+                            {isChecklistNote(note)
+                                ?
+                                <MenuItem onClick={() => { onNoteTypeChange("text"); handleOptionsClose() }}>Váltás szövegdobozra</MenuItem>
                                 :
-                                <MenuItem onClick={() => { onNoteTypeChange("noteWithChecklist"); handleOptionsClose() }}>Váltás listára</MenuItem>
+                                <MenuItem onClick={() => { onNoteTypeChange("checklist"); handleOptionsClose() }}>Váltás listára</MenuItem>
                             }
                         </Menu>
                     </Box>
