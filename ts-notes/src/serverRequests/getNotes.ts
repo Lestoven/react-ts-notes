@@ -1,7 +1,7 @@
 import { NoteData } from "../interfaces/NoteData";
 
 export async function getNotes(): Promise<NoteData[]> {
-    await getNotesData(2000);
+    await getNotesData(200);
     return [{
         id: 0,
         title: "New Note",
