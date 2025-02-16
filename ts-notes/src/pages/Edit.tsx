@@ -1,16 +1,16 @@
-import NoteSkeleton from "./components/edit/NoteSkeleton";
-import { NoteData } from "./interfaces/NoteData";
-import { isNoteContentList } from "./utils/isNoteContentList";
+import NoteSkeleton from "../components/edit/NoteSkeleton";
+import { NoteData } from "../interfaces/NoteData";
+import { isNoteContentList } from "../utils/isNoteContentList";
 import { ReactNode, useState } from "react";
-import { Checklist } from "./types/Checklist";
-import ChecklistPanel from "./components/ChecklistPanel";
-import { NoteType } from "./types/NoteType";
+import { Checklist } from "../types/Checklist";
+import ChecklistPanel from "../components/ChecklistPanel";
+import { NoteType } from "../types/NoteType";
 import { Container } from "@mui/material";
-import NoteDescription from "./components/notes/NoteDescription";
+import NoteDescription from "../components/notes/NoteDescription";
 import { ChangeEvent } from "react";
-import { useModalDispatch } from "./contexts/ModalContext";
-import { handleNoteUpdate } from "./contexts/NotesContext";
-import { useNotesDispatch } from "./contexts/NotesContext";
+import { useModalDispatch } from "../contexts/ModalContext";
+import { handleNoteUpdate } from "../contexts/NotesContext";
+import { useNotesDispatch } from "../contexts/NotesContext";
 
 const Edit = ({ originalNoteData }: { originalNoteData: NoteData }) => {
     const [noteData, setNoteData] = useState(originalNoteData);

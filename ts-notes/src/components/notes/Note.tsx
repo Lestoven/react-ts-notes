@@ -9,7 +9,7 @@ import { handleNoteUpdate } from "../../contexts/NotesContext";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { useModalDispatch } from "../../contexts/ModalContext";
-import Edit from "../../Edit";
+import Edit from "../../pages/Edit";
 
 const Note = ({ note }: { note: NoteData }) => {
     const notesDispatch = useNotesDispatch();
