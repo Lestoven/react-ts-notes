@@ -37,7 +37,9 @@ const Note = ({ note }: { note: NoteData }) => {
     };
 
     const handleDeleteBtnClick = () => {
-
+        if (modalDispatch) {
+            modalDispatch({type: "open", title: "Jegyzet törlése", content: <></>});
+        }
     };
 
 

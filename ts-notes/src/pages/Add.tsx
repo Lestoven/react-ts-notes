@@ -4,7 +4,7 @@ import { NoteType } from "../types/noteType";
 import { Container } from "@mui/material";
 import NoteEditor from "../components/notes/NoteEditor";
 import { ReactNode, useState } from "react";
-import TriggerNewNote from "../components/add/TriggerNewNote";
+import TriggerNewNote from "../components/notes/TriggerNewNote";
 
 export type AddState = "idle" | NoteType.Text | NoteType.Checklist;
 const Add = () => {

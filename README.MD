@@ -1,9 +1,16 @@
-TODO:
+# 🗒️ React Notes App
 
-* Refactor ADD (delete NewNoteSkeleton and use NoteSkeleton) and EDIT to erase code duplication
-* Make BasicModal more customizable by passing style via state.
+> ⚠️ This is an **unfinished project** inspired by **Google Keep**.  
+> I started this as a way to practice **React with TypeScript** and experiment with UI/UX patterns similar to Keep.  
+> The app is **unfinished**, and many features are still missing or only partially implemented.
+
+Currently, all data is **mocked** and stored in **localStorage** for development and testing purposes.
+---
+
+## 🛠️ TODO
+
 * **DELETE**
-* **Color** picker
-* **Share with user**
+* **COLOR PICKING FOR NOTe**  
+* **SHARE NOTES BETWEEN USERS**
 * **TAGS**
 * **UNDO/REDO**

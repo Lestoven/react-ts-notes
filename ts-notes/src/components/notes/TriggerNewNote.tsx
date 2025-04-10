@@ -28,7 +28,6 @@ const TriggerNewNote = ({handleAddStateChange} : {handleAddStateChange: (newAddS
                 <IconButton onClick={() => handleAddStateChange(NoteType.Checklist)}>
                     <CheckBoxIcon />
                 </IconButton>
-
             </InputAdornment>
         </Paper>
     )
